@@ -34,7 +34,7 @@ def gamma_enhance(img, A, C_avg, L):
     else:
         gamma = A * (L / C_avg)   # adaptive gamma
     
-    #print(f"gamma: {gamma:.3f}")
+    print(f"gamma: {gamma:.3f}")
     # normalize to [0,1]
     img_norm = img_f / 255.0
     
@@ -48,16 +48,16 @@ def gamma_enhance(img, A, C_avg, L):
 
 brightness ,contrast, saturation, C_avg = cip(img)
 # auto calculate gamma
-A = 640 / brightness
-A = min(A, 30)
-#print(A)
+A = 500 / brightness
+A = min(A, 25)
+print(A)
 #turn to numpy array
 img = np.array(img)
 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 # denoise
 brightness ,contrast, saturation, C_avg = cip(img)
-denoise_rate = 200 / brightness
-img = cv2.fastNlMeansDenoisingColored(img, None, denoise_rate*0.5, denoise_rate*0.4, 7, 21)
+denoise_rate = 100 / brightness
+img = cv2.fastNlMeansDenoisingColored(img, None, denoise_rate, denoise_rate, 7, 21)
 # correct gamma
 img, gamma = gamma_enhance(img, A, C_avg, brightness)
 # turn to pillow image
@@ -68,6 +68,7 @@ img = Image.fromarray(rgb)
 brightness ,contrast, saturation, C_avg = cip(img)
 contrast_enhancer = ImageEnhance.Contrast(img)
 img = contrast_enhancer.enhance((50/contrast+gamma / 5)/1.5)
+print((50/contrast+gamma / 5)/1.5)
 
 # save
 img.save('output.png')
