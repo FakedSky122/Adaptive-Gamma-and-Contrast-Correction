@@ -48,7 +48,7 @@ def gamma_enhance(img, A, C_avg, L):
 
 brightness ,contrast, saturation, C_avg = cip(img)
 # auto calculate gamma
-A = 500 / brightness
+A = 500 / contrast
 A = min(A, 25)
 print(A)
 #turn to numpy array
